@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace DistribuidorDeColas
 {
     public class DistribuidorColas
     {
         static Lazy<DistribuidorColas> _instance = new Lazy<DistribuidorColas>(() => new DistribuidorColas());
-
-        ConcurrentQueue<Notificacion> queue = new ConcurrentQueue<Notificacion>();
 
         public static DistribuidorColas Instance
         {
@@ -24,28 +23,21 @@ namespace DistribuidorDeColas
 
         internal DistribuidorColas()
         {
-            procesando = false;
         }
 
         public void Agregar(Notificacion notificacion)
         {
-            queue.Enqueue(notificacion);
+            GestorColasAzure gestor = new GestorColasAzure(notificacion.Tipo.ToString());
+            gestor.Agregar(notificacion);
         }
 
-        static bool procesando;
-
-        public void Procesar()
+        public void Agregar(List<Notificacion> notificaciones)
         {
-            var grouped = queue.GroupBy(x => x.Tipo).ToDictionary(x => x.Key, x => x);
-
-            foreach (var key in grouped.Keys)
+            GestorColasAzure gestor;
+            foreach (var n in notificaciones.GroupBy(x=>x.Tipo))
             {
-                Console.WriteLine($"Procesando notificaciones para la cola {key.ToString()}");
-                GestorColasAzure gestor = new GestorColasAzure(key.ToString());
-                foreach (var notificacion in grouped[key])
-                {
-                    gestor.Agregar(notificacion);
-                }
+                gestor = new GestorColasAzure(n.Key.ToString());
+                gestor.Agregar(n.ToList());
             }
         }
     }

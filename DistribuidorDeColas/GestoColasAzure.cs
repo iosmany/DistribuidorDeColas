@@ -29,7 +29,22 @@ namespace DistribuidorDeColas
             cola.AddMessage(message);
         }
 
-        
+        public void Agregar(List<Notificacion> notificaciones)
+        {
+            foreach (var n in notificaciones)
+            {
+                CloudQueueMessage message = new CloudQueueMessage(n.TextoMensaje);
+                cola.AddMessage(message);
+            }
+        }
+
+        public bool TieneElementosEnCola()
+        {
+            int? count = cola.ApproximateMessageCount;
+            return count.HasValue && count.Value > 0;
+        }
+
+
     }
 }
 

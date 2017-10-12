@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DistribuidorColas.cs" />
+    <Compile Include="ExecutingThread.cs" />
     <Compile Include="GestoColasAzure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
