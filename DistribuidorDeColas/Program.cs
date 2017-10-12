@@ -23,7 +23,7 @@ namespace DistribuidorDeColas
                 DistribuidorColas.Instance.Agregar(new Notificacion(TipoNotificacion.emails, new MensajeEmail() { Asunto = "Test", Body = "Esto es una prueba", EsHtml = false, From = "lorenkid@gmail.com", Para = "ios.rdgz@gmail.com" }));
                 DistribuidorColas.Instance.Agregar(new Notificacion(TipoNotificacion.emails, new MensajeEmail() { Asunto = "Test", Body = "Esto es una prueba", EsHtml = false, From = "lorenkid@gmail.com", Para = "ios.rdgz@gmail.com" }));
 
-                QueueThread.Run();
+                //QueueThread.Run();
 
                 Console.WriteLine("Esperando mas notificaciones");
                 Thread.Sleep(2000);
@@ -35,7 +35,7 @@ namespace DistribuidorDeColas
                 notificaciones.Add(new Notificacion(TipoNotificacion.sms, new MensajeSms() { Para = "+34665329447", Body = "TEst", Sender = "Beautylutio" }));
                 DistribuidorColas.Instance.Agregar(notificaciones);
 
-                QueueThread.Run();
+                //QueueThread.Run();
 
                 Console.WriteLine("Esperando mas notificaciones");
                 Thread.Sleep(2000);
@@ -44,7 +44,7 @@ namespace DistribuidorDeColas
                 DistribuidorColas.Instance.Agregar(new Notificacion(TipoNotificacion.logs, $"Error: {DateTime.Now}, Exception: Error en registro"));
                 DistribuidorColas.Instance.Agregar(new Notificacion(TipoNotificacion.logs, $"Error: {DateTime.Now}, Exception: Error en registro"));
 
-                QueueThread.Run();
+                //QueueThread.Run();
 
                 Console.WriteLine("Proceso Terminado");
 

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DistribuidorDeColas
 {
     internal static class QueueThread
     {
-        static EventWaitHandle waitSignal;
+        static EventWaitHandle autoReset;
         static Thread execution;
         static long finalizar;
 
@@ -17,7 +13,7 @@ namespace DistribuidorDeColas
         {
             Interlocked.Add(ref finalizar, 0L);
 
-            waitSignal = new EventWaitHandle(false, EventResetMode.AutoReset);
+            autoReset = new EventWaitHandle(false, EventResetMode.AutoReset);
             execution = new Thread(new ThreadStart(ProcessingQueue));
             execution.Start();
         }
@@ -28,42 +24,39 @@ namespace DistribuidorDeColas
             {
                 Console.WriteLine("Starting Processing");
                 GestorColasAzure gestorEmails = new GestorColasAzure(TipoNotificacion.emails.ToString());
-                GestorColasAzure gestorSms = new GestorColasAzure(TipoNotificacion.sms.ToString());
-                GestorColasAzure gestorLogs = new GestorColasAzure(TipoNotificacion.logs.ToString());
-
                 while (gestorEmails.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing emails notifications");
                     gestorEmails.ProcesaMensajes();
                 }
-
+                GestorColasAzure gestorSms = new GestorColasAzure(TipoNotificacion.sms.ToString());
                 while (gestorSms.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing sms notifications");
                     gestorSms.ProcesaMensajes();
                 }
-
+                GestorColasAzure gestorLogs = new GestorColasAzure(TipoNotificacion.logs.ToString());
                 while (gestorLogs.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing logs");
                     gestorLogs.ProcesaMensajes();
                 }
-
                 Console.WriteLine("Waiting for signal");
-                waitSignal.WaitOne();
+                autoReset.WaitOne();
             }
         }
 
         public static void Run()
         {
-            waitSignal.Set();
+            Console.WriteLine($"Thread State : {execution.ThreadState.ToString()}");
+            autoReset.Set();
         }
 
         public static void Stop()
         {
             Console.WriteLine("Ordering Finish");
             Interlocked.Exchange(ref finalizar, 1L);
-            waitSignal.Set();
+            autoReset.Set();
         }
 
         public static string GetState()

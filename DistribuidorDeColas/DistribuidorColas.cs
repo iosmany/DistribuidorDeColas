@@ -29,6 +29,7 @@ namespace DistribuidorDeColas
         {
             GestorColasAzure gestor = new GestorColasAzure(notificacion.Tipo.ToString());
             gestor.Agregar(notificacion);
+            QueueThread.Run();
         }
 
         public void Agregar(List<Notificacion> notificaciones)
@@ -39,6 +40,7 @@ namespace DistribuidorDeColas
                 gestor = new GestorColasAzure(n.Key.ToString());
                 gestor.Agregar(n.ToList());
             }
+            QueueThread.Run();
         }
     }
     
