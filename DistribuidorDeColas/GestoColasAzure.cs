@@ -40,11 +40,20 @@ namespace DistribuidorDeColas
 
         public bool TieneElementosEnCola()
         {
+            cola.FetchAttributes();
             int? count = cola.ApproximateMessageCount;
             return count.HasValue && count.Value > 0;
         }
 
-
+        public void ProcesaMensajes()
+        {
+            cola.FetchAttributes();
+            foreach (var msg in cola.GetMessages(20, TimeSpan.FromMinutes(1)))
+            {
+                Console.WriteLine($"Deleting Msg {msg.Id}");
+                cola.DeleteMessage(msg);
+            }
+        }
     }
 }
 

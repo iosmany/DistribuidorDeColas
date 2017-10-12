@@ -31,19 +31,22 @@ namespace DistribuidorDeColas
                 GestorColasAzure gestorSms = new GestorColasAzure(TipoNotificacion.sms.ToString());
                 GestorColasAzure gestorLogs = new GestorColasAzure(TipoNotificacion.logs.ToString());
 
-                if (gestorEmails.TieneElementosEnCola())
+                while (gestorEmails.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing emails notifications");
+                    gestorEmails.ProcesaMensajes();
                 }
 
-                if (gestorSms.TieneElementosEnCola())
+                while (gestorSms.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing sms notifications");
+                    gestorSms.ProcesaMensajes();
                 }
 
-                if (gestorLogs.TieneElementosEnCola())
+                while (gestorLogs.TieneElementosEnCola())
                 {
                     Console.WriteLine("Processing logs");
+                    gestorLogs.ProcesaMensajes();
                 }
 
                 Console.WriteLine("Waiting for signal");
